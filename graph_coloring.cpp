@@ -130,8 +130,17 @@ public:
 
     // decrease the key associated with index i to the specified value
     void decreaseKey(int i, int key)    {
-        keys[i] = key;
-        bubbleUp(index[i]);
+    	int ind;
+    	for(int j = 0; j<= N; j++)
+    	{
+    		if(heap[j] == i)
+    		{
+    			ind = j;
+    			break;
+			}
+		}
+        keys[ind] = key;
+        bubbleUp(index[ind]);
     }
 
     // increase the key associated with index i to the specified value
@@ -207,37 +216,53 @@ int main()
 		
 		//start dsatur algorithm to color the graph
 		//----------------------------------------------------------------------
-		//add vertices to the priority queue
+		
 		int saturation[n_vertices + 1] = {0};
 		int color[n_vertices + 1] = {0};
 		MinIndexedPQ pq(n_vertices);
 		
+		//add vertices to the priority queue
 		for(int i = 1; i <= n_vertices+1; i++)
 		{
 			pq.insert(i, -1*degree[i]);
 		}
+		
+		//color vertices
+		int max = 0;
 		while(!pq.isEmpty())
 		{
 			int current_node = pq.deleteMin();
-			int min_color = 1;
 			int color_ind[n_vertices + 1] = {0};
 			int ind;
+			
+			//find minimum color
 			for (set<int>::iterator it=graph[current_node].begin(); it!=graph[current_node].end(); ++it)
 			{
-				 color_ind[color[*it]] = 1;
+				 int node = *it;
+				 color_ind[color[node]] = 1; 
+				 saturation[node] += 1;   //increase saturation degree of neighbour nodes
+				 int node_key = n_vertices*saturation[node] + degree[node];
+				 node_key = -1*node_key;
+				 pq.decreaseKey(node, node_key); //change key of neighbours
 			}
+			
 			for(int k=1; k<=n_vertices+1; k++)
 			{
 				if(color_ind[k] == 0)
 				{
 					ind = k;
-					printf("%d\n", ind);
+					if(ind>max)
+					{
+						max = ind;
+					}
 					break;
 				}
 			}
+			
 			color[current_node] = ind;
 			color_ind[n_vertices + 1] = {0};
 		}
+		cout<<max;
 		//----------------------------------------------------------------------
 		return 0;
 	}
