@@ -24,7 +24,8 @@ vector<string> split(string str, string dlm){
     return arr;
 }
 
-//priority queue with change key
+//priority queue with change key 
+//- Reference:https://github.com/kartikkukreja/blog-codes/blob/master/src/Indexed%20Min%20Priority%20Queue.cpp
 class MinIndexedPQ {
     int NMAX, N, *heap, *index, *keys;
 
@@ -76,16 +77,6 @@ public:
         return N == 0;
     }
 
-    // check if i is an index on the PQ
-    bool contains(int i)    {
-        return index[i] != -1;
-    }
-
-    // return the number of elements in the PQ
-    int size()  {
-        return N;
-    }
-
     // associate key with index i; 0 < i < NMAX
     void insert(int i, int key) {
         N++;
@@ -95,18 +86,7 @@ public:
         bubbleUp(N);
     }
 
-    // returns the index associated with the minimal key
-    int minIndex()  {
-        return heap[1];
-    }
-
-    // returns the minimal key
-    int minKey()    {
-        return keys[heap[1]];
-    }
-
     // delete the minimal key and return its associated index
-    // Warning: Don't try to read from this index after calling this function
     int deleteMin() {
         int min = heap[1];
         swap(1, N--);
@@ -114,18 +94,6 @@ public:
         index[min] = -1;
         heap[N+1] = -1;
         return min;
-    }
-
-    // returns the key associated with index i
-    int keyOf(int i)    {
-        return keys[i];
-    }
-
-    // change the key associated with index i to the specified value
-    void changeKey(int i, int key)  {
-        keys[i] = key;
-        bubbleUp(index[i]);
-        bubbleDown(index[i]);
     }
 
     // decrease the key associated with index i to the specified value
@@ -141,21 +109,6 @@ public:
 		}
         keys[ind] = key;
         bubbleUp(index[ind]);
-    }
-
-    // increase the key associated with index i to the specified value
-    void increaseKey(int i, int key)    {
-        keys[i] = key;
-        bubbleDown(index[i]);
-    }
-
-    // delete the key associated with index i
-    void deleteKey(int i)   {
-        int ind = index[i];
-        swap(ind, N--);
-        bubbleUp(ind);
-        bubbleDown(ind);
-        index[i] = -1;
     }
 };
 
