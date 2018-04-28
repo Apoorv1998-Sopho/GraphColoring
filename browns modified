@@ -1,0 +1,36 @@
+# dsa project
+# Brelaz's paper
+
+def is_safe(n, graph, colors, c):    #checking colour of adjacent vertices
+    for i in xrange(n):
+        if graph[n-1][i] and c == colors[i]: return False
+    return True
+
+def graphColoringUtil(graph, color_nb, colors, n):
+    if color_nb+1 == n :        #checking if all vertex are assigned colours
+        return True
+
+    
+    for c in xrange(1, color_nb+1):   #trying all colours
+        if is_safe(n, graph, colors, c):    #check if colour c to n-1 is possible
+            colors[n-1] = c
+            if graphColoringUtil(graph, color_nb, colors, n+1): return True
+            colors[n-1] = 0             #if no solution ,remove colour 
+
+vertex_nb = 450
+color_nb = vertex_nb
+colors = [0] * vertex_nb
+
+graph = [[0]*vertex_nb for i in range(vertex_nb)]
+with open('C:/Users/rohit sharma/Desktop/games120.txt') as f:
+    for line in f:
+        a,b = [int(i) for i in line.split()]
+        graph[a-1][b-1]=1
+        graph[b-1][a-1]=1
+print graph
+if graphColoringUtil(graph, color_nb, colors, 0):
+    print colors
+else:
+    print "No solutions"
+
+
